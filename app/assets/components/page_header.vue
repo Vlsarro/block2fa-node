@@ -4,7 +4,7 @@
             <li><a href="/login">Log In</a></li>
             <li><a href="/signup">Sign Up</a></li>
         </ul>
-        <h3><a class="text-muted" style="text-decoration: none;" href="/">oContract</a></h3>
+        <h3><a class="text-muted" style="text-decoration: none;" href="/">BLOCK2FA-NODE</a></h3>
     </div>
 </template>
 
