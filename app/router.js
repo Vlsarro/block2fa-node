@@ -25,7 +25,7 @@ module.exports.init = (app, config) => {
     app.locals.rootPath = process.env.ROOT_PATH;
 
     //ExpressVue Setup
-    //Latest non-production version of vue as of writing this doc, 
+    //Latest non-production version of vue as of writing this doc,
     //you can go to https://unpkg.com/vue/ to find the latest version
     //check the vuejs.org docs for more info
     let vueScript = 'https://unpkg.com/vue@2.4.2/dist/vue.js';
@@ -58,6 +58,19 @@ module.exports.init = (app, config) => {
     const oauth2 = oauth2Api.init();
     app.use('/oauth2', oauth2);
 
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
+    app.use(validator());
+
+    app.use(compress());
+
+    require('./authentication').init(app);
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
     let sessionConfig = {
         secret: 'CHANGE_ME_TOKEN',
         name: 'session',
@@ -71,7 +84,6 @@ module.exports.init = (app, config) => {
             domain: 'foo.bar.com',
             secure: false,
             httpOnly: true,
-            maxAge: 60000
         }
     };
     if (env === 'production') {
@@ -84,12 +96,29 @@ module.exports.init = (app, config) => {
         app.use(logger(logType));
     }
 
+    app.use(cookieParser());
+
+    app.use(methodOverride());
+
+    app.use(cookieSession(sessionConfig));
+
     app.use(app.locals.rootPath, express.static(config.root));
     app.use('/', router);
 
     let controllers = glob.sync(config.root + '/routes/**/*.js');
     controllers.forEach(function (controller) {
         module.require(controller).default(router);
+    });
+
+    app.use(csrf({
+        cookie: true
+    }));
+
+    app.use(function (req, res, next) {
+        res.cookie('token', req.csrfToken(), {
+            path: '/'
+        });
+        next();
     });
 
     app.use((req, res) => {
@@ -113,35 +142,5 @@ module.exports.init = (app, config) => {
             next();
         }
     });
-
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
-    app.use(validator());
-
-    app.use(cookieParser());
-
-    app.use(methodOverride());
-
-    app.use(cookieSession(sessionConfig));
-
-    app.use(csrf({
-        cookie: true
-    }));
-
-    app.use(function (req, res, next) {
-        res.cookie('token', req.csrfToken(), {
-            path: '/'
-        });
-        next();
-    });
-
-    require('./authentication').init(app);
-
-    app.use(passport.initialize());
-    app.use(passport.session());
-
-    app.use(compress());
 
 };
