@@ -18,7 +18,6 @@ const user = {
 
 function findUser (username, callback) {
     // TODO: use database
-    console.log(`username is ${username}`);
     if (username === user.username) {
         return callback(null, user);
     }
@@ -26,18 +25,15 @@ function findUser (username, callback) {
 }
 
 passport.serializeUser(function (user, cb) {
-    console.log('serialize');
     cb(null, user.username);
 });
 
 passport.deserializeUser(function (username, cb) {
-    console.log('deserialize');
     findUser(username, cb);
 });
 
 function initPassport () {
     passport.use(new LocalStrategy((username, password, done) => {
-        console.log('fuck off');
         findUser(username, (err, user) => {
             if (err) {
                 return done(err);
