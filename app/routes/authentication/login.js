@@ -3,9 +3,10 @@ const passport = require('passport');
 module.exports.default = (router) => {
     router.get('/login', (req, res) => {
         const data = {
-            title: 'Hello World',
+            title: 'Login',
             message: 'login',
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            currentTab: req.originalUrl
         };
         const vueOptions = {
             head: {
@@ -17,6 +18,7 @@ module.exports.default = (router) => {
 
     router.post('/login', passport.authenticate('local', {
         successRedirect: '/',
-        failureRedirect: '/login'
+        failureRedirect: '/login',
+        failureFlash: true
     }));
 };

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <page_header></page_header>
+        <page-header :current-tab=currentTab></page-header>
         <h3>Login page ({{message}})</h3>
         <form action="/login" method="post">
             <input type="hidden" name="_csrf" :value="csrfToken">
@@ -18,14 +18,14 @@
 </template>
 
 <script>
-    import page_header from '../assets/components/page_header.vue';
+    import pageHeader from '../assets/components/page_header.vue';
     export default {
         data: function () {
             return {
             }
         },
         components: {
-            page_header
+            pageHeader
         },
     }
 </script>
