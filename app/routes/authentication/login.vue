@@ -3,6 +3,7 @@
         <page_header></page_header>
         <h3>Login page ({{message}})</h3>
         <form action="/login" method="post">
+            <input type="hidden" name="_csrf" :value="csrfToken">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input class="form-control" name="username" id="username" type="text" placeholder="Your username" />

@@ -4,7 +4,8 @@ module.exports.default = (router) => {
     router.get('/login', (req, res) => {
         const data = {
             title: 'Hello World',
-            message: 'login'
+            message: 'login',
+            csrfToken: req.csrfToken()
         };
         const vueOptions = {
             head: {
